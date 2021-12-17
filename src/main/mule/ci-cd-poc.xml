@@ -26,6 +26,7 @@ userId: payload.userId[ 0 to 9 ]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger END" doc:id="67207138-d142-4b4c-aa2e-147300ba4e39" message='#["Termination time " ++ now()]'/>
+		<logger level="INFO" doc:name="Extra Logger" doc:id="4d29ab84-51b1-4886-bac6-dc3fa1fc4281" message="Extra Logger"/>
 	
 	</flow>
 </mule>
