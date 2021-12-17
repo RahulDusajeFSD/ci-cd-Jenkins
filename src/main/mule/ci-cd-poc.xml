@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="85089ec3-dc9a-49de-a196-717697993f7c" >
+		<http:request-connection protocol="HTTPS" host="jsonplaceholder.typicode.com" port="443"/>
+	</http:request-config>
+	<flow name="ci-cd-pocFlow" doc:id="ad4271dc-ee56-43cb-ae99-5b584f9c0706" >
+		<scheduler doc:name="Scheduler" doc:id="17433054-0642-4002-83f9-39a33f25433f" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger START" doc:id="84cc3c15-3779-47b6-b671-a438ed0015e0" message='#["start time " ++ now()]'/>
+		<http:request method="GET" doc:name="Request" doc:id="aefc9235-9b03-48b5-9c0c-b1197486427e" config-ref="HTTP_Request_configuration" path="posts"/>
+		<ee:transform doc:name="Extract 10 userIds" doc:id="505ac856-228c-4d0d-bf5b-0800c13323c9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+userId: payload.userId[ 0 to 9 ]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger END" doc:id="67207138-d142-4b4c-aa2e-147300ba4e39" message='#["Termination time " ++ now()]'/>
+	
+	</flow>
+</mule>
